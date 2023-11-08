@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private Camera cam;
+
+    [SerializeField] private float speed = 12f;
+    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float jumpHeight = 3f;
+
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] private LayerMask groundMask;
+
     Animator animator;
-    [SerializeField] public AudioSource audioSource;
-    [SerializeField] public CharacterController controller;
-
-    [SerializeField] public float speed = 12f;
-    [SerializeField] public float gravity = -9.81f;
-    [SerializeField] public float jumpHeight = 3f;
-
-    [SerializeField] public Transform groundCheck;
-    [SerializeField] public float groundDistance = 0.4f;
-    [SerializeField] public LayerMask groundMask;
-
-    public Camera cam;
-
     Vector3 velocity;
     bool isGrounded;
 
@@ -102,14 +101,15 @@ public class PlayerMovement : MonoBehaviour
     // ATTACKING BEHAVIOUR //
     // ------------------- //
 
-    public float attackDistance = 3f;
-    public float attackDelay = 0.3f;
-    public float attackSpeed = 1f;
-    public int attackDamage = 1;
-    public LayerMask attackLayer;
+    [SerializeField] private float attackDistance = 5f;
+    [SerializeField] private float attackDelay = 0.4f;
+    [SerializeField] private float attackSpeed = 0.65f;
+    [SerializeField] private int attackDamage = 1;
 
-    public AudioClip swordSwing;
-    public AudioClip hitSound;
+    [SerializeField] private LayerMask attackLayer;
+
+    [SerializeField] private AudioClip swordSwing;
+    [SerializeField] private AudioClip hitSound;
 
     bool attacking = false;
     bool readyToAttack = true;

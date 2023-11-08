@@ -7,16 +7,24 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private Animator animator;
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private Transform player;
+    [SerializeField] private LayerMask playerMask;
+    [SerializeField] private ScoreCounter scoreCounter;
+
+    [SerializeField] private int maxHealth = 3;
+    [SerializeField] private float timeBetweenAttacks = 2.5f;
+    [SerializeField] private float attackRange = 2.5f;
+    [SerializeField] private int attackDamage = 1;
+
     int currentHealth;
-    public int maxHealth = 3;
-    public float timeBetweenAttacks = 0.5f;
-    public float attackRange = 2.5f;
     bool alreadyAttacked;
-    public bool playerInAttackRange;
-    public int attackDamage = 1;
-    public NavMeshAgent agent;
-    public Transform player;
-    public LayerMask playerMask;
+    bool playerInAttackRange;
+    string currentAnimationState;
+
+    public const string RUN = "Run";
+    public const string ATTACK = "Attack";
 
     void Awake()
     {
@@ -26,11 +34,12 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        scoreCounter = FindObjectOfType<ScoreCounter>();
     }
 
     private void Update()
     {
-        agent.SetDestination(player.position);
+        ChasePlayer();
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, playerMask);
         if (playerInAttackRange)
         {
@@ -38,19 +47,37 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void ChangeAnimationState(string newState)
+    {
+        if (currentAnimationState == newState) return;
+
+        currentAnimationState = newState;
+        animator.CrossFadeInFixedTime(currentAnimationState, 0.2f);
+    }
+
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
 
         if(currentHealth <= 0)
-        { Death(); }
+        { 
+            Death(); 
+        }
     }
 
     void Death()
     {
-        // Death function
-        // TEMPORARY: Destroy Object
+        scoreCounter.AddScore(10);
         Destroy(gameObject);
+    }
+
+    void ChasePlayer()
+    {
+        if (!alreadyAttacked)
+        {
+            agent.SetDestination(player.position);
+            ChangeAnimationState(RUN);
+        }
     }
 
     private void AttackPlayer()
@@ -60,9 +87,8 @@ public class Enemy : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-            Debug.Log("Damage taken");
             player.GetComponent<PlayerStats>().TakeDamage(attackDamage);
-
+            ChangeAnimationState(ATTACK);
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }

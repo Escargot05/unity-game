@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScreen.unity
     guid: 90ebf99ffaf157146b1aef8ef8304057
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/Scenes/poly_scene.unity
+    guid: 1c859f47924331146a8b345e63907339
   - enabled: 1
     path: Assets/Scenes/GameOverScreen.unity
     guid: d954228dd66951646b1a7a25f74fe49a

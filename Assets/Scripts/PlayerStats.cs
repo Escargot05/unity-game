@@ -24,6 +24,7 @@ public class PlayerStats : MonoBehaviour
     #endregion
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip ough;
+    [SerializeField] private AudioClip heal;
     [SerializeField] private float health;
     [SerializeField] private float maxHealth;
     [SerializeField] private float maxTotalHealth;
@@ -35,6 +36,7 @@ public class PlayerStats : MonoBehaviour
     public void Heal(float health)
     {
         this.health += health;
+        audioSource.PlayOneShot(heal);
         ClampHealth();
     }
 

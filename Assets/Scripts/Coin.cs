@@ -10,7 +10,6 @@ public class Coin : MonoBehaviour
     [SerializeField] private float rotateSpeed = 0.5f;
 
     private void OnTriggerEnter(Collider other) {
-        Debug.Log(other.name);
         if(other.name == "First Person Player") {
             PickUp();
         }
@@ -25,7 +24,7 @@ public class Coin : MonoBehaviour
     private void Update()
     {
         // here spinning coin was implemented but I will not share this :)
-        transform.Rotate(rotateSpeed, 0, 0);
+        transform.Rotate(0, rotateSpeed, 0);
     }
 
     public void PickUp()

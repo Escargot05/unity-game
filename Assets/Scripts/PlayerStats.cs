@@ -22,7 +22,8 @@ public class PlayerStats : MonoBehaviour
         }
     }
     #endregion
-
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip ough;
     [SerializeField] private float health;
     [SerializeField] private float maxHealth;
     [SerializeField] private float maxTotalHealth;
@@ -40,6 +41,7 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(float dmg)
     {
         health -= dmg;
+        audioSource.PlayOneShot(ough);
         if (health == 0)
         {
             Cursor.lockState = CursorLockMode.None;

@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
     bool alreadyAttacked;
     bool playerInAttackRange;
     string currentAnimationState;
+    Color originalColor; 
 
     public const string RUN = "Run";
     public const string ATTACK = "Attack";
@@ -33,6 +34,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        originalColor = GetComponentInChildren<Renderer>().material.color;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         scoreCounter = FindObjectOfType<ScoreCounter>();
     }
@@ -58,12 +60,15 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
-
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         { 
             Death(); 
         }
+        GetComponentInChildren<Renderer>().material.color = Color.red;
+        Invoke(nameof(ResetColor), 0.7f);
     }
+
+
 
     void Death()
     {
@@ -98,4 +103,11 @@ public class Enemy : MonoBehaviour
     {
         alreadyAttacked = false;
     }
+
+    private void ResetColor()
+    {
+        GetComponentInChildren<Renderer>().material.color = originalColor;
+    }
+
+
 }

@@ -2,6 +2,7 @@
  *  Author: ariel oliveira [o.arielg@gmail.com]
  */
 
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -46,6 +47,11 @@ public class PlayerStats : MonoBehaviour
         audioSource.PlayOneShot(ough);
         if (health == 0)
         {
+            int score = FindObjectOfType<ScoreCounter>().GetScore();
+            if (score > PlayerPrefs.GetInt("highScore"))
+            {
+                PlayerPrefs.SetInt("highScore", score);
+            }
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

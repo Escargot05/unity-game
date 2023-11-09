@@ -30,4 +30,9 @@ public class ScoreCounter : MonoBehaviour
         score += scorePoints;
         scoreText.text = $"Score: {score}";
     }
+
+    public int GetScore()
+    {
+        return score;
+    }
 }

@@ -2,7 +2,6 @@
  *  Author: ariel oliveira [o.arielg@gmail.com]
  */
 
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,7 +46,7 @@ public class PlayerStats : MonoBehaviour
         audioSource.PlayOneShot(ough);
         if (health == 0)
         {
-            int score = FindObjectOfType<ScoreCounter>().GetScore();
+            int score = FindObjectOfType<ScoreCounter>().score;
             if (score > PlayerPrefs.GetInt("highScore"))
             {
                 PlayerPrefs.SetInt("highScore", score);
@@ -60,18 +59,6 @@ public class PlayerStats : MonoBehaviour
         {
             ClampHealth();
         }
-    }
-
-    public void AddHealth()
-    {
-        if (maxHealth < maxTotalHealth)
-        {
-            maxHealth += 1;
-            health = maxHealth;
-
-            if (onHealthChangedCallback != null)
-                onHealthChangedCallback.Invoke();
-        }   
     }
 
     void ClampHealth()

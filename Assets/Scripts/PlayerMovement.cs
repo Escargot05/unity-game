@@ -1,22 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private CharacterController controller;
-    [SerializeField] private Camera cam;
+    // -------- //
+    // MOVEMENT //
+    // -------- //
 
+    [SerializeField] private CharacterController controller;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float groundDistance = 0.4f;
     [SerializeField] private float speed = 12f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float jumpHeight = 3f;
 
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private float groundDistance = 0.4f;
-    [SerializeField] private LayerMask groundMask;
-
-    Animator animator;
     Vector3 velocity;
     bool isGrounded;
 
@@ -25,13 +22,6 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -75,19 +65,18 @@ public class PlayerMovement : MonoBehaviour
 
     string currentAnimationState;
 
+    Animator animator;
+
     public void ChangeAnimationState(string newState)
     {
-        // STOP THE SAME ANIMATION FROM INTERRUPTING WITH ITSELF //
         if (currentAnimationState == newState) return;
 
-        // PLAY THE ANIMATION //
         currentAnimationState = newState;
         animator.CrossFadeInFixedTime(currentAnimationState, 0.2f);
     }
 
     void SetAnimations()
     {
-        // If player is not attacking
         if (!attacking)
         {
             if (velocity.x == 0 && velocity.z == 0)
@@ -105,21 +94,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float attackDelay = 0.4f;
     [SerializeField] private float attackSpeed = 0.65f;
     [SerializeField] private int attackDamage = 1;
-
     [SerializeField] private LayerMask attackLayer;
-
+    [SerializeField] private Camera cam;
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip swordSwing;
     [SerializeField] private AudioClip hitSound;
 
     bool attacking = false;
-    bool readyToAttack = true;
     int attackCount;
 
     public void Attack()
     {
-        if(!readyToAttack | attacking) return;
+        if (attacking) return;
 
-        readyToAttack = false;
         attacking = true;
 
         Invoke(nameof(ResetAttack), attackSpeed);
@@ -143,14 +130,13 @@ public class PlayerMovement : MonoBehaviour
     void ResetAttack()
     {
         attacking = false;
-        readyToAttack = true;
     }
     
     void AttackRaycast()
     {
         if(Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, attackDistance, attackLayer))
         {
-            HitTarget(hit.point);
+            HitTarget();
 
             if (hit.transform.TryGetComponent<Enemy>(out Enemy T))
             { 
@@ -159,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void HitTarget(Vector3 pos)
+    void HitTarget()
     {
         audioSource.pitch = 1;
         audioSource.PlayOneShot(hitSound);

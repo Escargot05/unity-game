@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,7 +15,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int attackDamage = 1;
 
     int currentHealth;
-    bool alreadyAttacked;
+    bool attacking;
     bool playerInAttackRange;
     string currentAnimationState;
     Color originalColor; 
@@ -60,10 +56,12 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
+
         if (currentHealth <= 0)
         { 
             Death(); 
         }
+
         GetComponentInChildren<Renderer>().material.color = Color.red;
         Invoke(nameof(ResetColor), 0.7f);
     }
@@ -78,7 +76,7 @@ public class Enemy : MonoBehaviour
 
     void ChasePlayer()
     {
-        if (!alreadyAttacked)
+        if (!attacking)
         {
             agent.SetDestination(player.position);
             ChangeAnimationState(RUN);
@@ -87,21 +85,22 @@ public class Enemy : MonoBehaviour
 
     private void AttackPlayer()
     {
+        if (attacking) return;
+
+        attacking = true;
+
+        Invoke(nameof(ResetAttack), timeBetweenAttacks);
+        player.GetComponent<PlayerStats>().TakeDamage(attackDamage);
+
         agent.SetDestination(transform.position);
         transform.LookAt(player);
 
-        if (!alreadyAttacked)
-        {
-            player.GetComponent<PlayerStats>().TakeDamage(attackDamage);
-            ChangeAnimationState(ATTACK);
-            alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
-        }
+        ChangeAnimationState(ATTACK);
     }
 
     private void ResetAttack()
     {
-        alreadyAttacked = false;
+        attacking = false;
     }
 
     private void ResetColor()

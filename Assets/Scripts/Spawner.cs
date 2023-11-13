@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -13,11 +11,10 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float coinSpawnRate = 5;
     [SerializeField] private float potionSpawnRate = 8;
 
-    private float enemyTimer = 0;
-    private float coinTimer = 0;
-    private float potionTimer = 0;
+    float enemyTimer = 0;
+    float coinTimer = 0;
+    float potionTimer = 0;
 
-    // Start is called before the first frame update
     void Start()
     {
         for (int i = 0; i < 5; i++)
@@ -57,7 +54,7 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            spawnCoin();
+            spawnPotion();
             potionTimer = 0;
         }
 

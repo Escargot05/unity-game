@@ -6,25 +6,25 @@ using TMPro;
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class Timer : MonoBehaviour
 {
-    private TextMeshProUGUI timer;
-    private int hours;
-    private int minutes;
-    private int seconds;
+    TextMeshProUGUI timer;
+    int hours;
+    int minutes;
+    int seconds;
+    float time;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         timer = GetComponent<TextMeshProUGUI>();
-        DisplayTime();
-        StartCoroutine(Countdown());
+        time = 0.0f;
     }
 
-    private IEnumerator Countdown()
+    private void Update()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f);
+        DisplayTime();
+        time += Time.deltaTime;
 
+        if (time >= 1.0f)
+        {
             if (seconds == 60)
             {
                 if (minutes == 60)
@@ -35,9 +35,8 @@ public class Timer : MonoBehaviour
                 seconds = 0;
                 minutes++;
             }
-
+            time = 0.0f;
             seconds++;
-            DisplayTime();
         }
     }
 

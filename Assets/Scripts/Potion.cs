@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Potion : MonoBehaviour
 {
-    [SerializeField] private GameObject player;
+    [SerializeField] private PlayerStats playerStats;
     [SerializeField] private float healPower = 3;
     [SerializeField] private float rotateSpeed = 0.5f;
 
@@ -18,7 +16,7 @@ public class Potion : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        playerStats = FindObjectOfType<PlayerStats>();
     }
 
     private void Update()
@@ -28,7 +26,7 @@ public class Potion : MonoBehaviour
 
     public void PickUp()
     {
-        player.GetComponent<PlayerStats>().Heal(healPower);
+        playerStats.Heal(healPower);
         Destroy(gameObject);
     }
 }

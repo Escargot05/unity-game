@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -9,14 +6,13 @@ public class ScoreCounter : MonoBehaviour
 {
     [SerializeField] private AudioSource scoreSFX;
 
-    // REMEMBER TO ADD TEXTMESHPRO TO YOUR PROJECT 
-    // https://learn.unity.com/tutorial/working-with-textmesh-pro#
-    private TextMeshProUGUI scoreText;
-    private int score = 0;
+    TextMeshProUGUI scoreText;
+    
+    public int score { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
-        // component of type TextMeshProUGUI should exist on this object, so we use GetComponent<T>() method to get a reference
+        score = 0;
         scoreText = GetComponent<TextMeshProUGUI>();
         scoreText.text = $"Score: {score}";
     }
@@ -29,10 +25,5 @@ public class ScoreCounter : MonoBehaviour
         }
         score += scorePoints;
         scoreText.text = $"Score: {score}";
-    }
-
-    public int GetScore()
-    {
-        return score;
     }
 }
